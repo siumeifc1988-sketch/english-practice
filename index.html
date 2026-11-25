@@ -205,7 +205,7 @@
       </div>
 
       <div class="weak-list" id="weak-box" style="display:none">
-        <h3>目前需加強的單字</h3>
+        <h3>目前需加強的項目</h3>
         <div id="weak-items"></div>
       </div>
     </div>
@@ -437,7 +437,7 @@
       Object.entries(data.cardStatus || {}).forEach(([id, status]) => {
         if (status === "weak") {
           const c = cards.find(x => x.id === id);
-          if (c) weaks.push(c.word + "（" + c.prompt + "）");
+          if (c) weaks.push(c.prompt);  // only Chinese, no English answer
         }
       });
       if (weaks.length) {
