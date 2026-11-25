@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>英文單字練習 | A2 → B1</title>
+  <title>生活英文練習 | 餐廳・咖啡・旅遊</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -25,7 +25,7 @@
       line-height: 1.5;
     }
     .container { max-width: 560px; margin: 0 auto; }
-    h1 { font-size: 1.4rem; margin-bottom: 4px; text-align: center; }
+    h1 { font-size: 1.35rem; margin-bottom: 4px; text-align: center; }
     .subtitle { text-align: center; color: var(--muted); margin-bottom: 14px; font-size: 0.88rem; }
 
     .stats {
@@ -50,10 +50,9 @@
     .panel { display: none; }
     .panel.active { display: block; }
 
-    /* Flashcard */
     .flashcard {
-      background: var(--card); border-radius: 16px; padding: 24px 18px;
-      min-height: 240px; display: flex; flex-direction: column;
+      background: var(--card); border-radius: 16px; padding: 22px 16px;
+      min-height: 250px; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center;
       cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       margin-bottom: 12px; position: relative;
@@ -69,16 +68,17 @@
     .flashcard.flipped .front { display: none; }
     .flashcard.flipped .back { display: block; }
 
-    .word { font-size: 2rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .ipa { font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif; }
-    .meaning { font-size: 1.15rem; margin: 8px 0; }
-    .spelling { font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
-    .example { font-size: 0.92rem; color: var(--accent); margin-top: 10px; font-style: italic; }
-    .pos { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+    .category { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+    .word { font-size: 1.85rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 4px; }
+    .ipa { font-size: 1.05rem; color: var(--accent); margin-bottom: 6px; }
+    .meaning { font-size: 1.1rem; margin: 6px 0; }
+    .spelling { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
+    .example { font-size: 0.9rem; color: var(--accent); margin-top: 8px; font-style: italic; }
+    .usage { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
 
     .speak-btn {
-      margin-top: 12px;
-      padding: 8px 16px;
+      margin-top: 10px;
+      padding: 8px 18px;
       border: none;
       border-radius: 20px;
       background: #334155;
@@ -99,7 +99,6 @@
 
     .progress { text-align: center; color: var(--muted); margin: 8px 0; font-size: 0.85rem; }
 
-    /* Quiz */
     .question-card {
       background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 12px;
     }
@@ -142,8 +141,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>英文單字練習</h1>
-    <p class="subtitle">A2 → B1 · 讀音 + 拼法 + 錯題解釋</p>
+    <h1>生活英文練習</h1>
+    <p class="subtitle">餐廳・咖啡・旅遊・日常應用</p>
 
     <div class="stats" id="stats">
       <div><strong id="stat-quizzes">0</strong>練習次數</div>
@@ -153,17 +152,17 @@
 
     <div class="tabs">
       <button class="tab active" data-tab="flash">單字卡</button>
-      <button class="tab" data-tab="quiz">練習題</button>
+      <button class="tab" data-tab="quiz">情境練習</button>
     </div>
 
     <!-- Flashcard -->
     <div id="flash" class="panel active">
-      <div class="progress" id="flash-progress">1 / 8</div>
+      <div class="progress" id="flash-progress">1 / 10</div>
       <div class="flashcard" id="card" onclick="flipCard()">
         <div class="label">點擊翻面</div>
         <div class="badge" id="card-badge"></div>
         <div class="front">
-          <div class="pos" id="front-pos"></div>
+          <div class="category" id="front-cat"></div>
           <div class="word" id="front-word"></div>
           <div class="ipa" id="front-ipa"></div>
           <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 讀音</button>
@@ -174,6 +173,7 @@
           <div class="meaning" id="back-meaning"></div>
           <div class="spelling" id="back-spelling"></div>
           <div class="example" id="back-example"></div>
+          <div class="usage" id="back-usage"></div>
           <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 再聽一次</button>
         </div>
       </div>
@@ -199,143 +199,187 @@
       <div class="result" id="result" style="display:none"></div>
     </div>
 
-    <footer>進度存在瀏覽器 · 支援讀音（需瀏覽器允許語音）</footer>
+    <footer>讀音使用瀏覽器語音 · 若聲音怪異可換瀏覽器試試（Chrome 通常較自然）</footer>
   </div>
 
   <script>
-    // ===== Vocabulary Cards (A2-B1) =====
+    // Practical daily vocabulary
     const cards = [
       {
         id: "w1",
-        word: "experience",
-        ipa: "/ɪkˈspɪəriəns/",
-        pos: "noun / verb",
-        meaning: "經驗；經歷",
-        spelling: "注意中間是 -eri-，不是 -eri-",
-        example: "I have a lot of experience in teaching."
+        category: "餐廳 Restaurant",
+        word: "menu",
+        ipa: "/ˈmenjuː/",
+        meaning: "菜單",
+        spelling: "men-u",
+        example: "Can I see the menu, please?",
+        usage: "點餐前常說的句子"
       },
       {
         id: "w2",
-        word: "although",
-        ipa: "/ɔːlˈðəʊ/",
-        pos: "conjunction",
-        meaning: "雖然、儘管",
-        spelling: "al-though，th 發 /ð/",
-        example: "Although it was raining, we went out."
+        category: "餐廳 Restaurant",
+        word: "recommend",
+        ipa: "/ˌrekəˈmend/",
+        meaning: "推薦",
+        spelling: "兩個 m：re-commend",
+        example: "What do you recommend?",
+        usage: "問店員推薦菜色"
       },
       {
         id: "w3",
-        word: "recommend",
-        ipa: "/ˌrekəˈmend/",
-        pos: "verb",
-        meaning: "推薦",
-        spelling: "兩個 m：re-commend",
-        example: "I recommend this restaurant."
+        category: "餐廳 Restaurant",
+        word: "bill",
+        ipa: "/bɪl/",
+        meaning: "帳單（美式也常用 check）",
+        spelling: "簡單拼法",
+        example: "Can I have the bill, please?",
+        usage: "結帳時使用"
       },
       {
         id: "w4",
-        word: "available",
-        ipa: "/əˈveɪləbl/",
-        pos: "adjective",
-        meaning: "可得到的、有空的",
-        spelling: "a-vail-able",
-        example: "Is this seat available?"
+        category: "咖啡 Cafe",
+        word: "latte",
+        ipa: "/ˈlɑːteɪ/",
+        meaning: "拿鐵",
+        spelling: "lat-te",
+        example: "I'd like a latte, please.",
+        usage: "點咖啡常用"
       },
       {
         id: "w5",
-        word: "decision",
-        ipa: "/dɪˈsɪʒn/",
-        pos: "noun",
-        meaning: "決定",
-        spelling: "-sion 發 /ʒn/",
-        example: "It was a difficult decision."
+        category: "咖啡 Cafe",
+        word: "takeaway",
+        ipa: "/ˈteɪkəweɪ/",
+        meaning: "外帶（美式 to go）",
+        spelling: "take-away",
+        example: "Is this for here or takeaway?",
+        usage: "店員常問的問題"
       },
       {
         id: "w6",
-        word: "improve",
-        ipa: "/ɪmˈpruːv/",
-        pos: "verb",
-        meaning: "改善、提升",
-        spelling: "im-prove",
-        example: "I want to improve my English."
+        category: "旅遊 Travel",
+        word: "reservation",
+        ipa: "/ˌrezəˈveɪʃn/",
+        meaning: "預約、訂位",
+        spelling: "re-ser-va-tion",
+        example: "I have a reservation under Kim.",
+        usage: "飯店或餐廳報預約名字"
       },
       {
         id: "w7",
-        word: "necessary",
-        ipa: "/ˈnesəsəri/",
-        pos: "adjective",
-        meaning: "必要的",
-        spelling: "一個 c，兩個 s：ne-ces-sary",
-        example: "It is necessary to practice every day."
+        category: "旅遊 Travel",
+        word: "luggage",
+        ipa: "/ˈlʌɡɪdʒ/",
+        meaning: "行李（不可數）",
+        spelling: "lug-gage（兩個 g）",
+        example: "Where can I leave my luggage?",
+        usage: "機場或飯店問行李"
       },
       {
         id: "w8",
-        word: "opportunity",
-        ipa: "/ˌɒpəˈtjuːnəti/",
-        pos: "noun",
-        meaning: "機會",
-        spelling: "op-por-tu-ni-ty（兩個 p）",
-        example: "This is a great opportunity for you."
+        category: "旅遊 Travel",
+        word: "direction",
+        ipa: "/dəˈrekʃn/",
+        meaning: "方向",
+        spelling: "di-rec-tion",
+        example: "Can you give me directions to the station?",
+        usage: "問路時使用"
+      },
+      {
+        id: "w9",
+        category: "日常 Daily",
+        word: "available",
+        ipa: "/əˈveɪləbl/",
+        meaning: "有空的、可用的",
+        spelling: "a-vail-able",
+        example: "Is this table available?",
+        usage: "問座位或時間是否有空"
+      },
+      {
+        id: "w10",
+        category: "日常 Daily",
+        word: "convenient",
+        ipa: "/kənˈviːniənt/",
+        meaning: "方便的",
+        spelling: "con-ven-ient",
+        example: "Is it convenient for you to meet tomorrow?",
+        usage: "約時間或問地點是否方便"
       }
     ];
 
-    // ===== Quiz with explanations =====
     const questions = [
       {
         id: "q1",
         type: "mc",
-        q: "「經驗」的正確拼法是？",
-        options: ["experiance", "experience", "expirience"],
+        q: "在餐廳想看菜單，最自然的說法是？",
+        options: ["Give me menu.", "Can I see the menu, please?", "I want menu."],
         answer: 1,
-        point: "experience",
-        explain: "正確是 experience。中間是 -eri-，很多人會拼成 -eri- 或 -iri-。"
+        point: "menu",
+        explain: "禮貌又常用的說法是 Can I see the menu, please?"
       },
       {
         id: "q2",
         type: "fill",
-        q: "雖然下雨，我們還是出去了。 → ______ it was raining, we went out.",
-        answer: "although",
-        point: "although",
-        explain: "表示「雖然」用 although（或 though）。because 是「因為」。"
+        q: "想請店員推薦：What do you ______ ?",
+        answer: "recommend",
+        point: "recommend",
+        explain: "問推薦用 recommend。"
       },
       {
         id: "q3",
         type: "mc",
-        q: "選擇正確的句子",
-        options: ["I recommend you this book.", "I recommend this book to you.", "I recommend to you this book."],
+        q: "結帳時怎麼說？",
+        options: ["I want pay.", "Can I have the bill, please?", "Give me money."],
         answer: 1,
-        point: "recommend",
-        explain: "recommend 的常用句型是 recommend something to someone。"
+        point: "bill",
+        explain: "Can I have the bill, please? 是最常見的結帳說法（美式也可用 check）。"
       },
       {
         id: "q4",
         type: "fill",
-        q: "這個 ent 有空嗎？ → Is this seat ______ ?",
-        answer: "available",
-        point: "available",
-        explain: "available 表示「可使用的 / 有空的」。"
+        q: "點一杯拿鐵：I'd like a ______, please.",
+        answer: "latte",
+        point: "latte",
+        explain: "latte 就是拿鐵。"
       },
       {
         id: "q5",
         type: "mc",
-        q: "「必要的」正確拼法？",
-        options: ["necesary", "necessary", "neccesary"],
+        q: "店員問「在這裡喝還是外帶？」較自然的英文是？",
+        options: ["Here or takeaway?", "Is this for here or takeaway?", "You eat here?"],
         answer: 1,
-        point: "necessary",
-        explain: "necessary 是一個 c、兩個 s（ne-ces-sary）。很多人选錯雙寫位置。"
+        point: "takeaway",
+        explain: "Is this for here or takeaway? 是咖啡店超常用句。"
       },
       {
         id: "q6",
         type: "fill",
-        q: "我想提升我的英文。 → I want to ______ my English.",
-        answer: "improve",
-        point: "improve",
-        explain: "improve 是動詞「改善、提升」。"
+        q: "飯店報預約：I have a ______ under Chen.",
+        answer: "reservation",
+        point: "reservation",
+        explain: "reservation 是預約/訂位。"
+      },
+      {
+        id: "q7",
+        type: "mc",
+        q: "「行李」正確說法是？",
+        options: ["luggages", "luggage", "luggags"],
+        answer: 1,
+        point: "luggage",
+        explain: "luggage 是不可數名詞，不能加 s。"
+      },
+      {
+        id: "q8",
+        type: "fill",
+        q: "問路：Can you give me ______ to the station?",
+        answer: "directions",
+        point: "direction",
+        explain: "directions（複數）表示「怎麼走」。"
       }
     ];
 
-    // ===== Storage =====
-    const STORAGE_KEY = "englishVocabData";
+    // Storage
+    const STORAGE_KEY = "dailyEnglishData";
 
     function loadData() {
       try {
@@ -352,18 +396,36 @@
 
     let data = loadData();
 
-    // ===== Speech =====
+    // Better voice selection
+    let preferredVoice = null;
+
+    function loadVoices() {
+      const voices = speechSynthesis.getVoices();
+      // Prefer clear English voices
+      preferredVoice = voices.find(v => v.lang === "en-US" && /Google|Samantha|Susan|Natural|Premium/i.test(v.name))
+        || voices.find(v => v.lang === "en-US" && v.localService)
+        || voices.find(v => v.lang.startsWith("en"))
+        || null;
+    }
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    loadVoices();
+
     function speakWord() {
       const c = orderedCards[current];
       if (!c || !window.speechSynthesis) return;
+      speechSynthesis.cancel();
       const utt = new SpeechSynthesisUtterance(c.word);
       utt.lang = "en-US";
-      utt.rate = 0.85;
-      speechSynthesis.cancel();
+      utt.rate = 0.8;
+      utt.pitch = 1;
+      if (preferredVoice) utt.voice = preferredVoice;
       speechSynthesis.speak(utt);
     }
 
-    // ===== Stats =====
+    // Stats
     function updateStats() {
       const history = data.quizHistory || [];
       document.getElementById("stat-quizzes").textContent = history.length;
@@ -382,7 +444,7 @@
       Object.entries(data.cardStatus || {}).forEach(([id, status]) => {
         if (status === "weak") {
           const c = cards.find(x => x.id === id);
-          if (c) weaks.push(c.word + " （" + c.meaning + "）");
+          if (c) weaks.push(c.word + "（" + c.meaning + "）");
         }
       });
       if (weaks.length) {
@@ -393,7 +455,7 @@
       }
     }
 
-    // ===== Flashcard =====
+    // Flashcard
     let orderedCards = [];
     let current = 0;
 
@@ -413,14 +475,15 @@
     function showCard() {
       if (!orderedCards.length) buildCardOrder();
       const c = orderedCards[current];
-      document.getElementById("front-pos").textContent = c.pos;
+      document.getElementById("front-cat").textContent = c.category;
       document.getElementById("front-word").textContent = c.word;
       document.getElementById("front-ipa").textContent = c.ipa;
       document.getElementById("back-word").textContent = c.word;
       document.getElementById("back-ipa").textContent = c.ipa;
       document.getElementById("back-meaning").textContent = c.meaning;
-      document.getElementById("back-spelling").textContent = "拼法重點：" + c.spelling;
+      document.getElementById("back-spelling").textContent = "拼法：" + c.spelling;
       document.getElementById("back-example").textContent = "例句：" + c.example;
+      document.getElementById("back-usage").textContent = c.usage;
       document.getElementById("flash-progress").textContent = (current + 1) + " / " + orderedCards.length;
 
       const badge = document.getElementById("card-badge");
@@ -468,7 +531,7 @@
       showCard();
     }
 
-    // ===== Quiz =====
+    // Quiz
     let userAnswers = [];
 
     function startQuiz() {
@@ -513,7 +576,6 @@
           div.appendChild(input);
         }
 
-        // explanation placeholder
         const exp = document.createElement("div");
         exp.className = "explain";
         exp.id = "explain-" + i;
@@ -545,7 +607,6 @@
         } else {
           data.weakPoints = data.weakPoints || {};
           data.weakPoints[q.point] = (data.weakPoints[q.point] || 0) + 1;
-          // also mark related card as weak if exists
           const related = cards.find(c => c.word === q.point);
           if (related) {
             data.cardStatus = data.cardStatus || {};
@@ -553,7 +614,6 @@
           }
         }
 
-        // show explanation when wrong (or always for learning)
         const expEl = document.getElementById("explain-" + i);
         if (expEl) {
           expEl.classList.add("show");
@@ -589,7 +649,7 @@
       result.style.display = "block";
       result.innerHTML = `<div class="score">${correct} / ${qs.length}</div>
         <p style="margin-top:6px">正確率 ${percent}%</p>
-        <p style="margin-top:6px;color:var(--muted)">${percent === 100 ? "全部答對，很棒！" : "已顯示錯題解釋，並標記相關單字為需加強"}</p>`;
+        <p style="margin-top:6px;color:var(--muted)">${percent === 100 ? "全部答對！生活英文更穩了" : "已顯示解釋，相關單字會優先出現在單字卡"}</p>`;
 
       document.getElementById("submit-btn").style.display = "none";
       document.getElementById("retry-btn").style.display = "inline-block";
