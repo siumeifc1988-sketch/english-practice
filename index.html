@@ -16,26 +16,27 @@
       --warning: #fbbf24;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      min-height: 100%;
       padding: 12px;
       line-height: 1.45;
-      overscroll-behavior: none;
+      overscroll-behavior-y: none;
     }
-    .container { max-width: 480px; margin: 0 auto; }
+    .container { max-width: 430px; margin: 0 auto; }
 
-    header { text-align: center; margin-bottom: 12px; }
-    h1 { font-size: 1.25rem; font-weight: 700; }
-    .subtitle { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+    header { text-align: center; margin-bottom: 10px; }
+    h1 { font-size: 1.2rem; font-weight: 700; }
+    .subtitle { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .stat-box {
       background: var(--card);
@@ -43,15 +44,15 @@
       padding: 10px 6px;
       text-align: center;
     }
-    .stat-box strong { display: block; font-size: 1.2rem; color: var(--accent); }
-    .stat-box span { font-size: 0.72rem; color: var(--muted); }
+    .stat-box strong { display: block; font-size: 1.15rem; color: var(--accent); }
+    .stat-box span { font-size: 0.7rem; color: var(--muted); }
 
     .tabs {
       display: flex;
       background: var(--card);
       border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 12px;
+      padding: 3px;
+      margin-bottom: 10px;
     }
     .tab {
       flex: 1;
@@ -60,9 +61,8 @@
       border-radius: 10px;
       background: transparent;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      cursor: pointer;
     }
     .tab.active { background: var(--accent); color: #0f172a; }
 
@@ -72,7 +72,7 @@
     .filter-row {
       display: flex;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       overflow-x: auto;
     }
     .filter-btn {
@@ -82,49 +82,55 @@
       border: 1px solid #334155;
       background: transparent;
       color: var(--muted);
-      font-size: 0.78rem;
-      cursor: pointer;
+      font-size: 0.75rem;
     }
     .filter-btn.active { background: #334155; color: var(--text); border-color: var(--accent); }
 
     .swipe-hint {
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
-    .card-wrapper {
+    .card-stage {
       position: relative;
-      overflow: hidden;
-      border-radius: 18px;
+      height: 380px;
       margin-bottom: 10px;
     }
 
     .flashcard {
+      position: absolute;
+      inset: 0;
       background: var(--card);
       border-radius: 18px;
-      padding: 28px 18px 22px;
-      min-height: 340px;
+      padding: 24px 16px 18px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      position: relative;
-      transition: transform 0.2s ease, background 0.2s;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+      transition: transform 0.25s ease, opacity 0.25s ease;
       touch-action: none;
       user-select: none;
+      overflow-y: auto;
     }
-    .flashcard.dragging { transition: none; }
+    .flashcard.leaving-left {
+      transform: translateX(-120%) rotate(-12deg);
+      opacity: 0;
+    }
+    .flashcard.leaving-right {
+      transform: translateX(120%) rotate(12deg);
+      opacity: 0;
+    }
 
     .badge {
       position: absolute;
       top: 12px;
       right: 12px;
-      font-size: 0.68rem;
-      padding: 3px 9px;
+      font-size: 0.66rem;
+      padding: 3px 8px;
       border-radius: 20px;
       background: #334155;
     }
@@ -135,69 +141,72 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       opacity: 0;
-      transition: opacity 0.15s;
       pointer-events: none;
       z-index: 5;
+      transition: opacity 0.1s;
     }
-    .swipe-indicator.left { left: 14px; color: var(--error); }
-    .swipe-indicator.right { right: 14px; color: var(--success); }
+    .swipe-indicator.left { left: 12px; color: var(--error); }
+    .swipe-indicator.right { right: 12px; color: var(--success); }
 
-    .category { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; }
-    .prompt { font-size: 1.6rem; font-weight: 700; margin-bottom: 18px; }
+    .category { font-size: 0.7rem; color: var(--muted); margin-bottom: 4px; }
+    .prompt { font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
 
     .answer-input {
       width: 100%;
-      max-width: 260px;
-      padding: 14px;
+      max-width: 240px;
+      padding: 12px;
       border-radius: 12px;
       border: 2px solid #334155;
       background: #0f172a;
       color: var(--text);
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .answer-input:focus { outline: none; border-color: var(--accent); }
     .answer-input.correct { border-color: var(--success); }
     .answer-input.wrong { border-color: var(--error); }
 
-    .result-area { width: 100%; display: none; text-align: left; margin-top: 4px; }
+    .result-area { width: 100%; display: none; text-align: left; }
     .result-area.show { display: block; }
 
     .correct-word {
-      font-size: 1.7rem;
+      font-size: 1.55rem;
       font-weight: 700;
       text-align: center;
       margin-bottom: 2px;
-      cursor: pointer;
       color: var(--accent);
+      cursor: pointer;
     }
-    .correct-word:active { opacity: 0.7; }
-    .syllable { font-size: 1rem; color: var(--muted); text-align: center; margin-bottom: 12px; letter-spacing: 1px; }
+    .syllable { font-size: 0.95rem; color: var(--muted); text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
 
-    .examples { margin: 6px 0 10px; }
-    .ex-item { margin-bottom: 10px; padding-left: 2px; }
-    .ex-en { font-size: 0.88rem; color: var(--accent); }
-    .ex-zh { font-size: 0.8rem; color: var(--muted); margin-top: 1px; }
+    .examples { margin: 4px 0 8px; }
+    .ex-item { margin-bottom: 8px; }
+    .ex-en {
+      font-size: 0.86rem;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .ex-en:active { opacity: 0.7; }
+    .ex-zh { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
 
     .native {
-      margin-top: 8px;
-      padding: 8px 10px;
+      margin-top: 6px;
+      padding: 7px 10px;
       background: #0f172a;
       border-radius: 10px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--warning);
       text-align: center;
     }
-
     .tap-hint {
       text-align: center;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--muted);
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .controls {
@@ -205,15 +214,13 @@
       gap: 8px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 6px;
     }
     .btn {
-      padding: 11px 16px;
+      padding: 11px 15px;
       border: none;
       border-radius: 12px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      cursor: pointer;
       background: var(--card);
       color: var(--text);
     }
@@ -222,43 +229,41 @@
     .btn.warning { background: var(--warning); color: #0f172a; }
 
     .progress-bar {
-      height: 4px;
+      height: 3px;
       background: #1e293b;
-      border-radius: 4px;
-      margin: 8px 0 4px;
+      border-radius: 3px;
+      margin: 6px 0 3px;
       overflow: hidden;
     }
     .progress-fill {
       height: 100%;
       background: var(--accent);
-      border-radius: 4px;
-      transition: width 0.3s;
+      border-radius: 3px;
+      transition: width 0.25s;
     }
-    .progress-text { text-align: center; font-size: 0.78rem; color: var(--muted); }
+    .progress-text { text-align: center; font-size: 0.74rem; color: var(--muted); margin-bottom: 6px; }
 
-    /* Quiz */
     .question-card {
       background: var(--card);
       border-radius: 14px;
-      padding: 16px;
+      padding: 14px;
       margin-bottom: 10px;
     }
-    .q-num { color: var(--muted); font-size: 0.75rem; margin-bottom: 4px; }
-    .q-text { font-size: 1rem; margin-bottom: 10px; }
+    .q-num { color: var(--muted); font-size: 0.72rem; margin-bottom: 4px; }
+    .q-text { font-size: 0.95rem; margin-bottom: 8px; }
     .options { display: flex; flex-direction: column; gap: 6px; }
     .option {
-      padding: 12px 14px;
+      padding: 11px 12px;
       background: #243044;
       border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
     .option.selected { background: var(--accent); color: #0f172a; }
     .option.correct { background: var(--success); color: #0f172a; }
     .option.wrong { background: var(--error); color: #0f172a; }
     .fill-input {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       border-radius: 10px;
       border: 2px solid #334155;
       background: #0f172a;
@@ -266,36 +271,36 @@
       font-size: 1rem;
     }
     .explain {
-      margin-top: 10px;
-      padding: 10px;
+      margin-top: 8px;
+      padding: 8px 10px;
       background: #0f172a;
       border-left: 3px solid var(--warning);
       border-radius: 0 8px 8px 0;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       color: var(--muted);
       display: none;
     }
     .explain.show { display: block; }
-    .result { margin-top: 14px; text-align: center; }
-    .score { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+    .result { margin-top: 12px; text-align: center; }
+    .score { font-size: 1.7rem; font-weight: 700; color: var(--accent); }
 
     .weak-list {
       background: var(--card);
       border-radius: 12px;
       padding: 12px;
-      margin-top: 12px;
-      font-size: 0.84rem;
+      margin-top: 10px;
+      font-size: 0.82rem;
     }
-    .weak-list h3 { font-size: 0.88rem; margin-bottom: 6px; color: var(--warning); }
+    .weak-list h3 { font-size: 0.85rem; margin-bottom: 5px; color: var(--warning); }
 
-    footer { text-align: center; margin-top: 20px; color: var(--muted); font-size: 0.72rem; }
+    footer { text-align: center; margin-top: 16px; color: var(--muted); font-size: 0.7rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <h1>生活英文單字卡</h1>
-      <p class="subtitle">主動回憶 · 點擊單字發聲 · 左滑不熟 / 右滑已掌握</p>
+      <p class="subtitle">點擊英文可發聲 · 左滑不熟 · 右滑已掌握</p>
     </header>
 
     <div class="stats">
@@ -320,7 +325,7 @@
       <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
       <div class="progress-text" id="flash-progress">1 / 10</div>
 
-      <div class="card-wrapper">
+      <div class="card-stage">
         <div class="swipe-indicator left" id="ind-left">還不熟</div>
         <div class="swipe-indicator right" id="ind-right">已掌握</div>
         <div class="flashcard" id="card">
@@ -331,11 +336,11 @@
           <input type="text" class="answer-input" id="user-answer" placeholder="輸入英文單字" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 
           <div class="result-area" id="result-area">
-            <div class="correct-word" id="correct-word" title="點擊發聲"></div>
+            <div class="correct-word" id="correct-word"></div>
             <div class="syllable" id="syllable"></div>
             <div class="examples" id="examples"></div>
             <div class="native" id="native"></div>
-            <div class="tap-hint">👆 點擊上方英文單字可發聲</div>
+            <div class="tap-hint">👆 點擊英文單字或例句可發聲</div>
           </div>
         </div>
       </div>
@@ -343,8 +348,8 @@
       <div class="controls">
         <button class="btn" onclick="prevCard()">上一張</button>
         <button class="btn primary" onclick="checkAnswer()">檢查</button>
-        <button class="btn warning" onclick="markWeak()">還不熟</button>
-        <button class="btn success" onclick="markKnown()">已掌握</button>
+        <button class="btn warning" onclick="doMark('weak')">還不熟</button>
+        <button class="btn success" onclick="doMark('known')">已掌握</button>
       </div>
 
       <div class="weak-list" id="weak-box" style="display:none">
@@ -362,7 +367,7 @@
       <div class="result" id="result" style="display:none"></div>
     </div>
 
-    <footer>記憶保存在本機 · 點擊英文單字發聲 · 專為手機優化</footer>
+    <footer>點擊英文可發聲 · 專為 iPhone 優化</footer>
   </div>
 
   <script>
@@ -419,7 +424,7 @@
       { id:"w8", category:"旅遊", prompt:"方向（問路）", word:"directions", syllable:"di-rec-tions",
         examples:[
           {en:"Can you give me directions to the station?", zh:"可以告訴我去車站怎麼走嗎？"},
-          {en:"I need directions to the airport.", zh:"我需要去機場的路線。"},
+          {en:"I need directions to the airport.", zh:"我需要去機場的路線。" },
           {en:"He gave us clear directions.", zh:"他給了我們清楚的指示。"}
         ],
         native:"母語人士也常說：How do I get to the station?" },
@@ -448,7 +453,7 @@
       { id:"q6", type:"fill", q:"飯店報預約：I have a ______ under Chan.", answer:"reservation", point:"reservation", explain:"reservation = 預約/訂位" }
     ];
 
-    const STORAGE_KEY = "dailyEnglishV2";
+    const STORAGE_KEY = "dailyEnglishV3";
     function loadData() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { quizHistory:[], cardStatus:{}, weakPoints:{} }; }
       catch { return { quizHistory:[], cardStatus:{}, weakPoints:{} }; }
@@ -477,36 +482,35 @@
 
     function updateStats() {
       const status = data.cardStatus || {};
-      const known = Object.values(status).filter(s => s==="known").length;
-      const weak = Object.values(status).filter(s => s==="weak").length;
       document.getElementById("stat-total").textContent = cards.length;
-      document.getElementById("stat-known").textContent = known;
-      document.getElementById("stat-weak").textContent = weak;
+      document.getElementById("stat-known").textContent = Object.values(status).filter(s => s==="known").length;
+      document.getElementById("stat-weak").textContent = Object.values(status).filter(s => s==="weak").length;
 
       const weaks = [];
-      Object.entries(status).forEach(([id, s]) => {
-        if (s === "weak") {
-          const c = cards.find(x => x.id === id);
+      Object.entries(status).forEach(([id,s]) => {
+        if (s==="weak") {
+          const c = cards.find(x => x.id===id);
           if (c) weaks.push(c.prompt);
         }
       });
       const box = document.getElementById("weak-box");
       if (weaks.length) {
         box.style.display = "block";
-        document.getElementById("weak-items").innerHTML = weaks.map(w => "• " + w).join("<br>");
+        document.getElementById("weak-items").innerHTML = weaks.map(w => "• "+w).join("<br>");
       } else box.style.display = "none";
     }
 
     let filter = "all";
     let orderedCards = [];
     let current = 0;
+    let isAnimating = false;
 
     function buildCardOrder() {
       let list = [...cards];
-      if (filter === "weak") list = list.filter(c => (data.cardStatus||{})[c.id] === "weak");
-      else if (filter === "new") list = list.filter(c => !(data.cardStatus||{})[c.id]);
+      if (filter==="weak") list = list.filter(c => (data.cardStatus||{})[c.id]==="weak");
+      else if (filter==="new") list = list.filter(c => !(data.cardStatus||{})[c.id]);
 
-      const weak = [], normal = [], known = [];
+      const weak=[], normal=[], known=[];
       list.forEach(c => {
         const s = (data.cardStatus||{})[c.id];
         if (s==="weak") weak.push(c);
@@ -522,15 +526,24 @@
     function showCard() {
       if (!orderedCards.length) buildCardOrder();
       const c = orderedCards[current];
+      const card = document.getElementById("card");
+
+      // reset animation classes
+      card.classList.remove("leaving-left", "leaving-right");
+      card.style.transform = "";
+      card.style.opacity = "1";
+      card.style.background = "";
+
       document.getElementById("front-cat").textContent = c.category;
       document.getElementById("front-prompt").textContent = c.prompt;
+
       const input = document.getElementById("user-answer");
       input.value = "";
       input.className = "answer-input";
       input.disabled = false;
       document.getElementById("result-area").classList.remove("show");
 
-      const pct = ((current) / orderedCards.length) * 100;
+      const pct = (current / Math.max(orderedCards.length,1)) * 100;
       document.getElementById("progress-fill").style.width = pct + "%";
       document.getElementById("flash-progress").textContent = (current+1) + " / " + orderedCards.length;
 
@@ -540,12 +553,11 @@
       else if (status==="known") { badge.textContent="已掌握"; badge.className="badge known"; }
       else { badge.textContent=""; badge.className="badge"; }
 
-      const card = document.getElementById("card");
-      card.style.transform = "";
-      card.style.background = "";
       document.getElementById("ind-left").style.opacity = 0;
       document.getElementById("ind-right").style.opacity = 0;
-      setTimeout(() => input.focus(), 50);
+
+      isAnimating = false;
+      setTimeout(() => input.focus(), 30);
     }
 
     function checkAnswer() {
@@ -556,13 +568,23 @@
 
       document.getElementById("correct-word").textContent = c.word;
       document.getElementById("syllable").textContent = c.syllable;
+
+      // examples with tap-to-speak
       document.getElementById("examples").innerHTML = c.examples.map((ex,i) =>
-        `<div class="ex-item"><div class="ex-en">${i+1}. ${ex.en}</div><div class="ex-zh">${ex.zh}</div></div>`
+        `<div class="ex-item">
+          <div class="ex-en" data-speak="${ex.en.replace(/"/g,"&quot;")}">${i+1}. ${ex.en}</div>
+          <div class="ex-zh">${ex.zh}</div>
+        </div>`
       ).join("");
+
+      // bind speak on examples
+      document.querySelectorAll(".ex-en").forEach(el => {
+        el.addEventListener("click", () => speak(el.dataset.speak));
+      });
+
       document.getElementById("native").textContent = c.native;
       document.getElementById("result-area").classList.add("show");
 
-      // auto speak the word
       speak(c.word);
 
       if (userVal === c.word.toLowerCase()) {
@@ -576,7 +598,6 @@
       input.disabled = true;
     }
 
-    // Tap word to speak
     document.getElementById("correct-word").addEventListener("click", () => {
       const c = orderedCards[current];
       if (c) speak(c.word);
@@ -586,25 +607,32 @@
       if (e.key === "Enter") checkAnswer();
     });
 
-    function nextCard() { current = (current + 1) % orderedCards.length; showCard(); }
-    function prevCard() { current = (current - 1 + orderedCards.length) % orderedCards.length; showCard(); }
-
-    function markWeak() {
-      const c = orderedCards[current];
-      data.cardStatus = data.cardStatus || {};
-      data.cardStatus[c.id] = "weak";
-      saveData(data);
-      nextCard();
+    function nextCard() {
+      current = (current + 1) % orderedCards.length;
+      showCard();
     }
-    function markKnown() {
-      const c = orderedCards[current];
-      data.cardStatus = data.cardStatus || {};
-      data.cardStatus[c.id] = "known";
-      saveData(data);
-      nextCard();
+    function prevCard() {
+      current = (current - 1 + orderedCards.length) % orderedCards.length;
+      showCard();
     }
 
-    // Filter buttons
+    function doMark(type) {
+      if (isAnimating) return;
+      isAnimating = true;
+      const c = orderedCards[current];
+      data.cardStatus = data.cardStatus || {};
+      data.cardStatus[c.id] = type;
+      saveData(data);
+
+      const card = document.getElementById("card");
+      card.classList.add(type === "weak" ? "leaving-left" : "leaving-right");
+
+      setTimeout(() => {
+        nextCard();
+      }, 260);
+    }
+
+    // Filter
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -615,39 +643,35 @@
       });
     });
 
-    // Swipe
+    // Improved swipe (no stuck)
     const cardEl = document.getElementById("card");
-    let startX = 0, currentX = 0, isDragging = false;
+    let startX = 0, currentX = 0, dragging = false;
 
     function onStart(e) {
-      isDragging = true;
+      if (isAnimating) return;
+      dragging = true;
       startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
-      cardEl.classList.add("dragging");
+      cardEl.style.transition = "none";
     }
     function onMove(e) {
-      if (!isDragging) return;
+      if (!dragging || isAnimating) return;
       currentX = (e.type.includes("mouse") ? e.clientX : e.touches[0].clientX) - startX;
-      cardEl.style.transform = `translateX(${currentX}px) rotate(${currentX*0.03}deg)`;
+      cardEl.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.04}deg)`;
       const abs = Math.abs(currentX);
-      document.getElementById("ind-left").style.opacity = currentX < -30 ? Math.min(abs/100,1) : 0;
-      document.getElementById("ind-right").style.opacity = currentX > 30 ? Math.min(abs/100,1) : 0;
-      if (currentX < -50) cardEl.style.background = "#3f1f1f";
-      else if (currentX > 50) cardEl.style.background = "#1f3f2a";
-      else cardEl.style.background = "";
+      document.getElementById("ind-left").style.opacity = currentX < -40 ? Math.min(abs/120, 1) : 0;
+      document.getElementById("ind-right").style.opacity = currentX > 40 ? Math.min(abs/120, 1) : 0;
     }
     function onEnd() {
-      if (!isDragging) return;
-      isDragging = false;
-      cardEl.classList.remove("dragging");
-      if (currentX < -80) {
-        cardEl.style.transform = "translateX(-130%) rotate(-18deg)";
-        setTimeout(markWeak, 180);
-      } else if (currentX > 80) {
-        cardEl.style.transform = "translateX(130%) rotate(18deg)";
-        setTimeout(markKnown, 180);
+      if (!dragging) return;
+      dragging = false;
+      cardEl.style.transition = "transform 0.25s ease, opacity 0.25s ease";
+
+      if (currentX < -90) {
+        doMark("weak");
+      } else if (currentX > 90) {
+        doMark("known");
       } else {
         cardEl.style.transform = "";
-        cardEl.style.background = "";
         document.getElementById("ind-left").style.opacity = 0;
         document.getElementById("ind-right").style.opacity = 0;
       }
