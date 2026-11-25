@@ -67,7 +67,7 @@
 
     .flashcard {
       background: var(--card); border-radius: 16px; padding: 24px 18px;
-      min-height: 280px; display: flex; flex-direction: column;
+      min-height: 300px; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center;
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       position: relative;
@@ -76,7 +76,7 @@
       user-select: none;
     }
     .flashcard.dragging { transition: none; }
-    .flashcard .label co { position: absolute; top: 10px; left: 14px; font-size: 0.7rem; color: var(--muted); }
+    .flashcard .label { position: absolute; top: 10px; left: 14px; font-size: 0.7rem; color: var(--muted); }
     .flashcard .badge {
       position: absolute; top: 10px; right: 14px; font-size: 0.68rem;
       padding: 2px 8px; border-radius: 20px; background: #334155;
@@ -114,19 +114,21 @@
     .answer-input.correct { border-color: var(--success); }
     .answer-input.wrong { border-color: var(--error); }
 
-    .result-area { width: 100%; margin-top: 8px; display: none; }
+    .result-area { width: 100%; margin-top: 8px; display: none; text-align: left; }
     .result-area.show { display: block; }
-    .correct-word { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
-    .syllable { font-size: 1.15rem; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; }
-    .example { font-size: 0.9rem; color: var(--accent); margin-top: 8px; font-style: italic; }
-    .usage { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+    .correct-word { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; text-align: center; }
+    .syllable { font-size: 1.1rem; color: var(--accent); margin-bottom: 10px; letter-spacing: 1px; text-align: center; }
+    .examples { margin: 8px 0; }
+    .examples div { font-size: 0.88rem; color: var(--accent); margin: 4px 0; padding-left: 4px; }
+    .usage { font-size: 0.85rem; color: var(--muted); margin-top: 6px; text-align: center; }
     .native {
       margin-top: 10px;
       padding: 8px 12px;
       background: #1e293b;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: var(--warning);
+      text-align: center;
     }
 
     .speak-btn {
@@ -138,6 +140,9 @@
       color: var(--text);
       font-size: 0.9rem;
       cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
     .speak-btn:active { background: var(--accent); color: #0f172a; }
 
@@ -195,7 +200,7 @@
 <body>
   <div class="container">
     <h1>生活英文單字卡</h1>
-    <p class="subtitle">只看中文 → 輸入英文 · 左滑不熟 · 右滑已掌握</p>
+    <p class="subtitle">只看中文 → 輸入英文 · 三個例句 · 左滑不熟 · 右滑已掌握</p>
 
     <div class="stats" id="stats">
       <div><strong id="stat-quizzes">0</strong>練習次數</div>
@@ -227,7 +232,7 @@
           <div class="result-area" id="result-area">
             <div class="correct-word" id="correct-word"></div>
             <div class="syllable" id="syllable"></div>
-            <div class="example" id="example"></div>
+            <div class="examples" id="examples"></div>
             <div class="usage" id="usage"></div>
             <div class="native" id="native"></div>
             <button class="speak-btn" onclick="speakWord()">🔊 讀音</button>
@@ -258,21 +263,111 @@
       <div class="result" id="result" style="display:none"></div>
     </div>
 
-    <footer>左滑標記不熟 · 右滑標記已掌握</footer>
+    <footer>三個不同用法例句 · 左滑不熟 · 右滑已掌握</footer>
   </div>
 
   <script>
     const cards = [
-      { id:"w1", category:"餐廳", prompt:"菜單", word:"menu", syllable:"men-u", example:"Can I see the menu, please?", usage:"點餐前常說", native:"母語人士也常說：Could I get a menu? / Menu, please." },
-      { id:"w2", category:"餐廳", prompt:"推薦", word:"recommend", syllable:"re-com-mend", example:"What do you recommend?", usage:"問店員推薦菜色（注意兩個 m）", native:"母語人士也常說：What's good here? / What do you suggest?" },
-      { id:"w3", category:"餐廳", prompt:"帳單", word:"bill", syllable:"bill", example:"Can I have the bill, please?", usage:"結帳時使用", native:"美式常說：Can I get the check? / Check, please." },
-      { id:"w4", category:"咖啡", prompt:"拿鐵", word:"latte", syllable:"lat-te", example:"I'd like a latte, please.", usage:"點咖啡常用", native:"母語人士也常說：Can I get a latte? / Latte, please." },
-      { id:"w5", category:"咖啡", prompt:"外帶", word:"takeaway", syllable:"take-a-way", example:"Is this for here or takeaway?", usage:"咖啡店常問的問題", native:"美式常說：For here or to go?" },
-      { id:"w6", category:"旅遊", prompt:"預約 / 訂位", word:"reservation", syllable:"re-ser-va-tion", example:"I have a reservation under Chan.", usage:"飯店或餐廳報預約", native:"母語人士也常說：I booked a table under Chan. / Reservation for Chan." },
-      { id:"w7", category:"旅遊", prompt:"行李", word:"luggage", syllable:"lug-gage", example:"Where can I leave my luggage?", usage:"不可數名詞，不能加 s", native:"美式更常用：bags / suitcase。Where can I leave my bags?" },
-      { id:"w8", category:"旅遊", prompt:"方向（問路）", word:"directions", syllable:"di-rec-tions", example:"Can you give me directions to the station?", usage:"問路時用複數", native:"母語人士也常說：How do I get to the station? / Which way is the station?" },
-      { id:"w9", category:"日常", prompt:"有空的 / 可用的", word:"available", syllable:"a-vail-a-ble", example:"Is this table available?", usage:"問座位或時間是否有空", native:"母語人士也常說：Is this table free? / Is anyone sitting here?" },
-      { id:"w10", category:"日常", prompt:"方便的", word:"convenient", syllable:"con-ven-ient", example:"Is it convenient for you?", usage:"約時間或問是否方便", native:"母語人士也常說：Does that work for you? / Is that okay with you?" }
+      {
+        id: "w1", category: "餐廳", prompt: "菜單", word: "menu", syllable: "men-u",
+        examples: [
+          "Can I see the menu, please?",
+          "What's on the menu today?",
+          "We looked at the menu before ordering."
+        ],
+        usage: "點餐前常說",
+        native: "母語人士也常說：Could I get a menu? / Menu, please."
+      },
+      {
+        id: "w2", category: "餐廳", prompt: "推薦", word: "recommend", syllable: "re-com-mend",
+        examples: [
+          "What do you recommend?",
+          "I recommend the pasta.",
+          "She recommended this restaurant to me."
+        ],
+        usage: "問店員推薦菜色（注意兩個 m）",
+        native: "母語人士也常說：What's good here? / What do you suggest?"
+      },
+      {
+        id: "w3", category: "餐廳", prompt: "帳單", word: "bill", syllable: "bill",
+        examples: [
+          "Can I have the bill, please?",
+          "Could you bring the bill?",
+          "We split the bill."
+        ],
+        usage: "結帳時使用",
+        native: "美式常說：Can I get the check? / Check, please."
+      },
+      {
+        id: "w4", category: "咖啡", prompt: "拿鐵", word: "latte", syllable: "lat-te",
+        examples: [
+          "I'd like a latte, please.",
+          "Can I get an iced latte?",
+          "She ordered a latte to go."
+        ],
+        usage: "點咖啡常用",
+        native: "母語人士也常說：Can I get a latte? / Latte, please."
+      },
+      {
+        id: "w5", category: "咖啡", prompt: "外帶", word: "takeaway", syllable: "take-a-way",
+        examples: [
+          "Is this for here or takeaway?",
+          "I'd like it takeaway, please.",
+          "We got some takeaway food."
+        ],
+        usage: "咖啡店常問的問題",
+        native: "美式常說：For here or to go?"
+      },
+      {
+        id: "w6", category: "旅遊", prompt: "預約 / 訂位", word: "reservation", syllable: "re-ser-va-tion",
+        examples: [
+          "I have a reservation under Chan.",
+          "I'd like to make a reservation for two.",
+          "Do you need a reservation?"
+        ],
+        usage: "飯店或餐廳報預約",
+        native: "母語人士也常說：I booked a table under Chan. / Reservation for Chan."
+      },
+      {
+        id: "w7", category: "旅遊", prompt: "行李", word: "luggage", syllable: "lug-gage",
+        examples: [
+          "Where can I leave my luggage?",
+          "How many pieces of luggage do you have?",
+          "My luggage is still at the hotel."
+        ],
+        usage: "不可數名詞，不能加 s",
+        native: "美式更常用：bags / suitcase。Where can I leave my bags?"
+      },
+      {
+        id: "w8", category: "旅遊", prompt: "方向（問路）", word: "directions", syllable: "di-rec-tions",
+        examples: [
+          "Can you give me directions to the station?",
+          "I need directions to the airport.",
+          "He gave us clear directions."
+        ],
+        usage: "問路時用複數",
+        native: "母語人士也常說：How do I get to the station? / Which way is the station?"
+      },
+      {
+        id: "w9", category: "日常", prompt: "有空的 / 可用的", word: "available", syllable: "a-vail-a-ble",
+        examples: [
+          "Is this table available?",
+          "Are you available tomorrow?",
+          "The room is available from 3 pm."
+        ],
+        usage: "問座位或時間是否有空",
+        native: "母語人士也常說：Is this table free? / Is anyone sitting here?"
+      },
+      {
+        id: "w10", category: "日常", prompt: "方便的", word: "convenient", syllable: "con-ven-ient",
+        examples: [
+          "Is it convenient for you?",
+          "This location is very convenient.",
+          "What time is convenient for the meeting?"
+        ],
+        usage: "約時間或問是否方便",
+        native: "母語人士也常說：Does that work for you? / Is that okay with you?"
+      }
     ];
 
     const questions = [
@@ -379,7 +474,7 @@
 
       document.getElementById("correct-word").textContent = c.word;
       document.getElementById("syllable").textContent = c.syllable;
-      document.getElementById("example").textContent = "例句：" + c.example;
+      document.getElementById("examples").innerHTML = c.examples.map((ex,i) => `<div>${i+1}. ${ex}</div>`).join("");
       document.getElementById("usage").textContent = c.usage;
       document.getElementById("native").textContent = c.native;
       document.getElementById("result-area").classList.add("show");
@@ -414,7 +509,7 @@
       nextCard();
     }
 
-    // ===== Swipe logic =====
+    // Swipe
     const cardEl = document.getElementById("card");
     let startX = 0, currentX = 0, isDragging = false;
 
@@ -427,11 +522,9 @@
       if (!isDragging) return;
       currentX = (e.type.includes("mouse") ? e.clientX : e.touches[0].clientX) - startX;
       cardEl.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.03}deg)`;
-
       const abs = Math.abs(currentX);
       document.getElementById("ind-left").style.opacity = currentX < -30 ? Math.min(abs/100, 1) : 0;
       document.getElementById("ind-right").style.opacity = currentX > 30 ? Math.min(abs/100, 1) : 0;
-
       if (currentX < -50) cardEl.style.background = "#3f1f1f";
       else if (currentX > 50) cardEl.style.background = "#1f3f2a";
       else cardEl.style.background = "";
@@ -440,15 +533,12 @@
       if (!isDragging) return;
       isDragging = false;
       cardEl.classList.remove("dragging");
-
       if (currentX < -80) {
-        // swipe left → weak
         cardEl.style.transform = "translateX(-120%) rotate(-15deg)";
-        setTimeout(() => { markWeak(); }, 200);
+        setTimeout(() => markWeak(), 200);
       } else if (currentX > 80) {
-        // swipe right → known
         cardEl.style.transform = "translateX(120%) rotate(15deg)";
-        setTimeout(() => { markKnown(); }, 200);
+        setTimeout(() => markKnown(), 200);
       } else {
         cardEl.style.transform = "";
         cardEl.style.background = "";
@@ -465,7 +555,7 @@
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onEnd);
 
-    // Quiz (unchanged core)
+    // Quiz
     let userAnswers = [];
     function startQuiz() {
       userAnswers = [];
