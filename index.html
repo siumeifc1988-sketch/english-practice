@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生活英文練習 | 餐廳・咖啡・旅遊</title>
+  <title>生活英文單字卡 | 主動回憶</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -51,10 +51,10 @@
     .panel.active { display: block; }
 
     .flashcard {
-      background: var(--card); border-radius: 16px; padding: 22px 16px;
-      min-height: 250px; display: flex; flex-direction: column;
+      background: var(--card); border-radius: 16px; padding: 24px 18px;
+      min-height: 260px; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center;
-      cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       margin-bottom: 12px; position: relative;
     }
     .flashcard .label { position: absolute; top: 10px; left: 14px; font-size: 0.7rem; color: var(--muted); }
@@ -63,16 +63,29 @@
       padding: 2px 8px; border-radius: 20px; background: #334155;
     }
     .flashcard .badge.weak { background: var(--error); color: #0f172a; }
-    .flashcard .front, .flashcard .back { width: 100%; }
-    .flashcard .back { display: none; }
-    .flashcard.flipped .front { display: none; }
-    .flashcard.flipped .back { display: block; }
 
-    .category { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
-    .word { font-size: 1.85rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 4px; }
-    .ipa { font-size: 1.05rem; color: var(--accent); margin-bottom: 6px; }
-    .meaning { font-size: 1.1rem; margin: 6px 0; }
-    .spelling { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
+    .category { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
+    .prompt { font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; }
+    .answer-input {
+      width: 100%; max-width: 280px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .answer-input:focus { outline: none; border-color: var(--accent); }
+    .answer-input.correct { border-color: var(--success); }
+    .answer-input.wrong { border-color: var(--error); }
+
+    .result-area { width: 100%; margin-top: 8px; display: none; }
+    .result-area.show { display: block; }
+    .correct-word { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
+    .syllable { font-size: 1.15rem; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; }
+    .meaning { font-size: 1rem; margin: 6px 0; }
     .example { font-size: 0.9rem; color: var(--accent); margin-top: 8px; font-style: italic; }
     .usage { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
 
@@ -88,7 +101,7 @@
     }
     .speak-btn:active { background: var(--accent); color: #0f172a; }
 
-    .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+    .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
     button.btn {
       padding: 10px 14px; border: none; border-radius: 10px;
       font-size: 0.9rem; cursor: pointer; background: var(--card); color: var(--text);
@@ -141,8 +154,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>生活英文練習</h1>
-    <p class="subtitle">餐廳・咖啡・旅遊・日常應用</p>
+    <h1>生活英文單字卡</h1>
+    <p class="subtitle">只看中文 → 輸入英文 · 音節拆解</p>
 
     <div class="stats" id="stats">
       <div><strong id="stat-quizzes">0</strong>練習次數</div>
@@ -158,31 +171,32 @@
     <!-- Flashcard -->
     <div id="flash" class="panel active">
       <div class="progress" id="flash-progress">1 / 10</div>
-      <div class="flashcard" id="card" onclick="flipCard()">
-        <div class="label">點擊翻面</div>
+      <div class="flashcard" id="card">
+        <div class="label">輸入英文後按檢查</div>
         <div class="badge" id="card-badge"></div>
-        <div class="front">
-          <div class="category" id="front-cat"></div>
-          <div class="word" id="front-word"></div>
-          <div class="ipa" id="front-ipa"></div>
-          <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 讀音</button>
-        </div>
-        <div class="back">
-          <div class="word" id="back-word"></div>
-          <div class="ipa" id="back-ipa"></div>
-          <div class="meaning" id="back-meaning"></div>
-          <div class="spelling" id="back-spelling"></div>
-          <div class="example" id="back-example"></div>
-          <div class="usage" id="back-usage"></div>
-          <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 再聽一次</button>
+
+        <div class="category" id="front-cat"></div>
+        <div class="prompt" id="front-prompt"></div>
+
+        <input type="text" class="answer-input" id="user-answer" placeholder="輸入英文單字" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+        <div class="result-area" id="result-area">
+          <div class="correct-word" id="correct-word"></div>
+          <div class="syllable" id="syllable"></div>
+          <div class="example" id="example"></div>
+          <div class="usage" id="usage"></div>
+          <button class="speak-btn" onclick="speakWord()">🔊 讀音</button>
         </div>
       </div>
+
       <div class="controls">
         <button class="btn" onclick="prevCard()">上一張</button>
+        <button class="btn primary" id="check-btn" onclick="checkAnswer()">檢查</button>
         <button class="btn warning" onclick="markWeak()">還不熟</button>
         <button class="btn success" onclick="markKnown()">已掌握</button>
-        <button class="btn primary" onclick="nextCard()">下一張</button>
+        <button class="btn" onclick="nextCard()">下一張</button>
       </div>
+
       <div class="weak-list" id="weak-box" style="display:none">
         <h3>目前需加強的單字</h3>
         <div id="weak-items"></div>
@@ -199,111 +213,100 @@
       <div class="result" id="result" style="display:none"></div>
     </div>
 
-    <footer>讀音使用瀏覽器語音 · 若聲音怪異可換瀏覽器試試（Chrome 通常較自然）</footer>
+    <footer>主動回憶模式 · 輸入後才顯示答案與音節</footer>
   </div>
 
   <script>
-    // Practical daily vocabulary
     const cards = [
       {
         id: "w1",
-        category: "餐廳 Restaurant",
+        category: "餐廳",
+        prompt: "菜單",
         word: "menu",
-        ipa: "/ˈmenjuː/",
-        meaning: "菜單",
-        spelling: "men-u",
+        syllable: "men-u",
         example: "Can I see the menu, please?",
-        usage: "點餐前常說的句子"
+        usage: "點餐前常說"
       },
       {
         id: "w2",
-        category: "餐廳 Restaurant",
+        category: "餐廳",
+        prompt: "推薦",
         word: "recommend",
-        ipa: "/ˌrekəˈmend/",
-        meaning: "推薦",
-        spelling: "兩個 m：re-commend",
+        syllable: "re-com-mend",
         example: "What do you recommend?",
-        usage: "問店員推薦菜色"
+        usage: "問店員推薦菜色（注意兩個 m）"
       },
       {
         id: "w3",
-        category: "餐廳 Restaurant",
+        category: "餐廳",
+        prompt: "帳單",
         word: "bill",
-        ipa: "/bɪl/",
-        meaning: "帳單（美式也常用 check）",
-        spelling: "簡單拼法",
+        syllable: "bill",
         example: "Can I have the bill, please?",
         usage: "結帳時使用"
       },
       {
         id: "w4",
-        category: "咖啡 Cafe",
+        category: "咖啡",
+        prompt: "拿鐵",
         word: "latte",
-        ipa: "/ˈlɑːteɪ/",
-        meaning: "拿鐵",
-        spelling: "lat-te",
+        syllable: "lat-te",
         example: "I'd like a latte, please.",
         usage: "點咖啡常用"
       },
       {
         id: "w5",
-        category: "咖啡 Cafe",
+        category: "咖啡",
+        prompt: "外帶",
         word: "takeaway",
-        ipa: "/ˈteɪkəweɪ/",
-        meaning: "外帶（美式 to go）",
-        spelling: "take-away",
+        syllable: "take-a-way",
         example: "Is this for here or takeaway?",
-        usage: "店員常問的問題"
+        usage: "咖啡店常問的問題"
       },
       {
         id: "w6",
-        category: "旅遊 Travel",
+        category: "旅遊",
+        prompt: "預約 / 訂位",
         word: "reservation",
-        ipa: "/ˌrezəˈveɪʃn/",
-        meaning: "預約、訂位",
-        spelling: "re-ser-va-tion",
-        example: "I have a reservation under Kim.",
-        usage: "飯店或餐廳報預約名字"
+        syllable: "re-ser-va-tion",
+        example: "I have a reservation under Chan.",
+        usage: "飯店或餐廳報預約"
       },
       {
         id: "w7",
-        category: "旅遊 Travel",
+        category: "旅遊",
+        prompt: "行李",
         word: "luggage",
-        ipa: "/ˈlʌɡɪdʒ/",
-        meaning: "行李（不可數）",
-        spelling: "lug-gage（兩個 g）",
+        syllable: "lug-gage",
         example: "Where can I leave my luggage?",
-        usage: "機場或飯店問行李"
+        usage: "不可數名詞，不能加 s"
       },
       {
         id: "w8",
-        category: "旅遊 Travel",
-        word: "direction",
-        ipa: "/dəˈrekʃn/",
-        meaning: "方向",
-        spelling: "di-rec-tion",
+        category: "旅遊",
+        prompt: "方向（問路）",
+        word: "directions",
+        syllable: "di-rec-tions",
         example: "Can you give me directions to the station?",
-        usage: "問路時使用"
+        usage: "問路時用複數"
       },
       {
         id: "w9",
-        category: "日常 Daily",
+        category: "日常",
+        prompt: "有空的 / 可用的",
         word: "available",
-        ipa: "/əˈveɪləbl/",
-        meaning: "有空的、可用的",
-        spelling: "a-vail-able",
+        syllable: "a-vail-a-ble",
         example: "Is this table available?",
         usage: "問座位或時間是否有空"
       },
       {
         id: "w10",
-        category: "日常 Daily",
+        category: "日常",
+        prompt: "方便的",
         word: "convenient",
-        ipa: "/kənˈviːniənt/",
-        meaning: "方便的",
-        spelling: "con-ven-ient",
-        example: "Is it convenient for you to meet tomorrow?",
-        usage: "約時間或問地點是否方便"
+        syllable: "con-ven-ient",
+        example: "Is it convenient for you?",
+        usage: "約時間或問是否方便"
       }
     ];
 
@@ -312,7 +315,7 @@
         id: "q1",
         type: "mc",
         q: "在餐廳想看菜單，最自然的說法是？",
-        options: ["Give me menu.", "Can I see the menu, please?", "I want menu."],
+        options: ["Give me menu.", "Can I see the menu, please?", "I want the menu."],
         answer: 1,
         point: "menu",
         explain: "禮貌又常用的說法是 Can I see the menu, please?"
@@ -323,16 +326,16 @@
         q: "想請店員推薦：What do you ______ ?",
         answer: "recommend",
         point: "recommend",
-        explain: "問推薦用 recommend。"
+        explain: "拼法是 re-com-mend（兩個 m）。"
       },
       {
         id: "q3",
         type: "mc",
-        q: "結帳時怎麼說？",
-        options: ["I want pay.", "Can I have the bill, please?", "Give me money."],
+        q: "結帳時最常用的說法是？",
+        options: ["I want pay.", "Can I have the bill, please?", "Give me the money."],
         answer: 1,
         point: "bill",
-        explain: "Can I have the bill, please? 是最常見的結帳說法（美式也可用 check）。"
+        explain: "Can I have the bill, please? 是最常見說法。"
       },
       {
         id: "q4",
@@ -345,7 +348,7 @@
       {
         id: "q5",
         type: "mc",
-        q: "店員問「在這裡喝還是外帶？」較自然的英文是？",
+        q: "店員問「在這裡喝還是外帶？」較自然的是？",
         options: ["Here or takeaway?", "Is this for here or takeaway?", "You eat here?"],
         answer: 1,
         point: "takeaway",
@@ -354,32 +357,14 @@
       {
         id: "q6",
         type: "fill",
-        q: "飯店報預約：I have a ______ under Chen.",
+        q: "飯店報預約：I have a ______ under Chan.",
         answer: "reservation",
         point: "reservation",
         explain: "reservation 是預約/訂位。"
-      },
-      {
-        id: "q7",
-        type: "mc",
-        q: "「行李」正確說法是？",
-        options: ["luggages", "luggage", "luggags"],
-        answer: 1,
-        point: "luggage",
-        explain: "luggage 是不可數名詞，不能加 s。"
-      },
-      {
-        id: "q8",
-        type: "fill",
-        q: "問路：Can you give me ______ to the station?",
-        answer: "directions",
-        point: "direction",
-        explain: "directions（複數）表示「怎麼走」。"
       }
     ];
 
-    // Storage
-    const STORAGE_KEY = "dailyEnglishData";
+    const STORAGE_KEY = "dailyEnglishActiveRecall";
 
     function loadData() {
       try {
@@ -396,21 +381,15 @@
 
     let data = loadData();
 
-    // Better voice selection
     let preferredVoice = null;
-
     function loadVoices() {
       const voices = speechSynthesis.getVoices();
-      // Prefer clear English voices
       preferredVoice = voices.find(v => v.lang === "en-US" && /Google|Samantha|Susan|Natural|Premium/i.test(v.name))
-        || voices.find(v => v.lang === "en-US" && v.localService)
+        || voices.find(v => v.lang === "en-US")
         || voices.find(v => v.lang.startsWith("en"))
         || null;
     }
-
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = loadVoices;
-    }
+    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
     loadVoices();
 
     function speakWord() {
@@ -420,12 +399,10 @@
       const utt = new SpeechSynthesisUtterance(c.word);
       utt.lang = "en-US";
       utt.rate = 0.8;
-      utt.pitch = 1;
       if (preferredVoice) utt.voice = preferredVoice;
       speechSynthesis.speak(utt);
     }
 
-    // Stats
     function updateStats() {
       const history = data.quizHistory || [];
       document.getElementById("stat-quizzes").textContent = history.length;
@@ -444,7 +421,7 @@
       Object.entries(data.cardStatus || {}).forEach(([id, status]) => {
         if (status === "weak") {
           const c = cards.find(x => x.id === id);
-          if (c) weaks.push(c.word + "（" + c.meaning + "）");
+          if (c) weaks.push(c.word + "（" + c.prompt + "）");
         }
       });
       if (weaks.length) {
@@ -455,7 +432,6 @@
       }
     }
 
-    // Flashcard
     let orderedCards = [];
     let current = 0;
 
@@ -476,14 +452,11 @@
       if (!orderedCards.length) buildCardOrder();
       const c = orderedCards[current];
       document.getElementById("front-cat").textContent = c.category;
-      document.getElementById("front-word").textContent = c.word;
-      document.getElementById("front-ipa").textContent = c.ipa;
-      document.getElementById("back-word").textContent = c.word;
-      document.getElementById("back-ipa").textContent = c.ipa;
-      document.getElementById("back-meaning").textContent = c.meaning;
-      document.getElementById("back-spelling").textContent = "拼法：" + c.spelling;
-      document.getElementById("back-example").textContent = "例句：" + c.example;
-      document.getElementById("back-usage").textContent = c.usage;
+      document.getElementById("front-prompt").textContent = c.prompt;
+      document.getElementById("user-answer").value = "";
+      document.getElementById("user-answer").className = "answer-input";
+      document.getElementById("user-answer").disabled = false;
+      document.getElementById("result-area").classList.remove("show");
       document.getElementById("flash-progress").textContent = (current + 1) + " / " + orderedCards.length;
 
       const badge = document.getElementById("card-badge");
@@ -498,12 +471,41 @@
         badge.textContent = "";
         badge.className = "badge";
       }
-      document.getElementById("card").classList.remove("flipped");
+
+      document.getElementById("user-answer").focus();
     }
 
-    function flipCard() {
-      document.getElementById("card").classList.toggle("flipped");
+    function checkAnswer() {
+      const c = orderedCards[current];
+      const input = document.getElementById("user-answer");
+      const userVal = input.value.trim().toLowerCase();
+      const correct = c.word.toLowerCase();
+
+      if (!userVal) return;
+
+      const resultArea = document.getElementById("result-area");
+      document.getElementById("correct-word").textContent = c.word;
+      document.getElementById("syllable").textContent = c.syllable;
+      document.getElementById("example").textContent = "例句：" + c.example;
+      document.getElementById("usage").textContent = c.usage;
+      resultArea.classList.add("show");
+
+      if (userVal === correct) {
+        input.className = "answer-input correct";
+      } else {
+        input.className = "answer-input wrong";
+        // auto mark weak on wrong
+        data.cardStatus = data.cardStatus || {};
+        data.cardStatus[c.id] = "weak";
+        saveData(data);
+      }
+      input.disabled = true;
     }
+
+    // Enter key to check
+    document.getElementById("user-answer").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAnswer();
+    });
 
     function nextCard() {
       current = (current + 1) % orderedCards.length;
@@ -531,7 +533,7 @@
       showCard();
     }
 
-    // Quiz
+    // Quiz (kept simple)
     let userAnswers = [];
 
     function startQuiz() {
@@ -581,7 +583,6 @@
         exp.id = "explain-" + i;
         exp.textContent = q.explain;
         div.appendChild(exp);
-
         area.appendChild(div);
       });
 
@@ -596,18 +597,14 @@
       qs.forEach((q, i) => {
         const ans = userAnswers[i];
         let isCorrect = false;
-        if (q.type === "mc") {
-          isCorrect = ans && ans.value === q.answer;
-        } else {
-          isCorrect = ans && ans.value === q.answer.toLowerCase();
-        }
+        if (q.type === "mc") isCorrect = ans && ans.value === q.answer;
+        else isCorrect = ans && ans.value === q.answer.toLowerCase();
 
-        if (isCorrect) {
-          correct++;
-        } else {
+        if (isCorrect) correct++;
+        else {
           data.weakPoints = data.weakPoints || {};
           data.weakPoints[q.point] = (data.weakPoints[q.point] || 0) + 1;
-          const related = cards.find(c => c.word === q.point);
+          const related = cards.find(c => c.word === q.point || c.word === q.point + "s");
           if (related) {
             data.cardStatus = data.cardStatus || {};
             data.cardStatus[related.id] = "weak";
@@ -630,9 +627,8 @@
         } else {
           const input = cardsEl[i].querySelector("input");
           input.disabled = true;
-          if (isCorrect) {
-            input.style.borderColor = "var(--success)";
-          } else {
+          if (isCorrect) input.style.borderColor = "var(--success)";
+          else {
             input.style.borderColor = "var(--error)";
             input.placeholder = "正確答案：" + q.answer;
           }
@@ -645,18 +641,15 @@
       if (data.quizHistory.length > 30) data.quizHistory = data.quizHistory.slice(-30);
       saveData(data);
 
-      const result = document.getElementById("result");
-      result.style.display = "block";
-      result.innerHTML = `<div class="score">${correct} / ${qs.length}</div>
-        <p style="margin-top:6px">正確率 ${percent}%</p>
-        <p style="margin-top:6px;color:var(--muted)">${percent === 100 ? "全部答對！生活英文更穩了" : "已顯示解釋，相關單字會優先出現在單字卡"}</p>`;
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `<div class="score">${correct} / ${qs.length}</div>
+        <p style="margin-top:6px">正確率 ${percent}%</p>`;
 
       document.getElementById("submit-btn").style.display = "none";
       document.getElementById("retry-btn").style.display = "inline-block";
       buildCardOrder();
     }
 
-    // Tabs
     document.querySelectorAll(".tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
@@ -666,7 +659,6 @@
       });
     });
 
-    // Init
     buildCardOrder();
     showCard();
     startQuiz();
