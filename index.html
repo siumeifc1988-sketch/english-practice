@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>英文練習 | A2 → B1</title>
+  <title>英文單字練習 | A2 → B1</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -25,22 +25,22 @@
       line-height: 1.5;
     }
     .container { max-width: 560px; margin: 0 auto; }
-    h1 { font-size: 1.45rem; margin-bottom: 4px; text-align: center; }
-    .subtitle { text-align: center; color: var(--muted); margin-bottom: 16px; font-size: 0.9rem; }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; text-align: center; }
+    .subtitle { text-align: center; color: var(--muted); margin-bottom: 14px; font-size: 0.88rem; }
 
     .stats {
       background: var(--card);
       border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
       display: flex;
       justify-content: space-around;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
-    .stats div strong { display: block; font-size: 1.2rem; color: var(--accent); }
+    .stats div strong { display: block; font-size: 1.15rem; color: var(--accent); }
 
-    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
     .tab {
       flex: 1; padding: 11px; border: none; border-radius: 10px;
       background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer;
@@ -50,17 +50,17 @@
     .panel { display: none; }
     .panel.active { display: block; }
 
+    /* Flashcard */
     .flashcard {
-      background: var(--card); border-radius: 16px; padding: 28px 20px;
-      min-height: 210px; display: flex; flex-direction: column;
+      background: var(--card); border-radius: 16px; padding: 24px 18px;
+      min-height: 240px; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center;
       cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      margin-bottom: 12px; position: relative; transition: transform 0.15s;
+      margin-bottom: 12px; position: relative;
     }
-    .flashcard:active { transform: scale(0.98); }
-    .flashcard .label { position: absolute; top: 10px; left: 14px; font-size: 0.72rem; color: var(--muted); }
+    .flashcard .label { position: absolute; top: 10px; left: 14px; font-size: 0.7rem; color: var(--muted); }
     .flashcard .badge {
-      position: absolute; top: 10px; right: 14px; font-size: 0.7rem;
+      position: absolute; top: 10px; right: 14px; font-size: 0.68rem;
       padding: 2px 8px; border-radius: 20px; background: #334155;
     }
     .flashcard .badge.weak { background: var(--error); color: #0f172a; }
@@ -68,26 +68,43 @@
     .flashcard .back { display: none; }
     .flashcard.flipped .front { display: none; }
     .flashcard.flipped .back { display: block; }
-    .card-text { font-size: 1.3rem; margin-bottom: 6px; }
-    .card-note { font-size: 0.88rem; color: var(--muted); margin-top: 10px; }
-    .card-example { font-size: 0.92rem; color: var(--accent); margin-top: 6px; }
+
+    .word { font-size: 2rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .ipa { font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif; }
+    .meaning { font-size: 1.15rem; margin: 8px 0; }
+    .spelling { font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
+    .example { font-size: 0.92rem; color: var(--accent); margin-top: 10px; font-style: italic; }
+    .pos { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+
+    .speak-btn {
+      margin-top: 12px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #334155;
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .speak-btn:active { background: var(--accent); color: #0f172a; }
 
     .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
     button.btn {
-      padding: 11px 16px; border: none; border-radius: 10px;
-      font-size: 0.95rem; cursor: pointer; background: var(--card); color: var(--text);
+      padding: 10px 14px; border: none; border-radius: 10px;
+      font-size: 0.9rem; cursor: pointer; background: var(--card); color: var(--text);
     }
     button.btn.primary { background: var(--accent); color: #0f172a; font-weight: 600; }
     button.btn.success { background: var(--success); color: #0f172a; }
     button.btn.warning { background: var(--warning); color: #0f172a; }
 
-    .progress { text-align: center; color: var(--muted); margin: 8px 0; font-size: 0.88rem; }
+    .progress { text-align: center; color: var(--muted); margin: 8px 0; font-size: 0.85rem; }
 
+    /* Quiz */
     .question-card {
-      background: var(--card); border-radius: 14px; padding: 18px; margin-bottom: 12px;
+      background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 12px;
     }
-    .q-num { color: var(--muted); font-size: 0.8rem; margin-bottom: 6px; }
-    .q-text { font-size: 1.08rem; margin-bottom: 12px; }
+    .q-num { color: var(--muted); font-size: 0.78rem; margin-bottom: 6px; }
+    .q-text { font-size: 1.05rem; margin-bottom: 10px; }
     .options { display: flex; flex-direction: column; gap: 7px; }
     .option {
       padding: 11px 14px; background: #334155; border-radius: 10px; cursor: pointer;
@@ -100,22 +117,33 @@
       width: 100%; padding: 11px; border-radius: 10px;
       border: 2px solid #334155; background: #0f172a; color: var(--text); font-size: 1rem;
     }
+    .explain {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #1e293b;
+      border-left: 3px solid var(--warning);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: none;
+    }
+    .explain.show { display: block; }
     .result { margin-top: 16px; text-align: center; font-size: 1.05rem; }
-    .score { font-size: 1.9rem; font-weight: 700; color: var(--accent); }
+    .score { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
 
     .weak-list {
-      background: var(--card); border-radius: 12px; padding: 12px 16px; margin-top: 16px;
-      font-size: 0.88rem;
+      background: var(--card); border-radius: 12px; padding: 12px 14px; margin-top: 14px;
+      font-size: 0.85rem;
     }
-    .weak-list h3 { font-size: 0.95rem; margin-bottom: 8px; color: var(--warning); }
+    .weak-list h3 { font-size: 0.92rem; margin-bottom: 6px; color: var(--warning); }
 
-    footer { text-align: center; margin-top: 32px; color: var(--muted); font-size: 0.78rem; }
+    footer { text-align: center; margin-top: 28px; color: var(--muted); font-size: 0.75rem; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>英文練習</h1>
-    <p class="subtitle">A2 → B1 · 有進度記憶 + 優先練弱點</p>
+    <h1>英文單字練習</h1>
+    <p class="subtitle">A2 → B1 · 讀音 + 拼法 + 錯題解釋</p>
 
     <div class="stats" id="stats">
       <div><strong id="stat-quizzes">0</strong>練習次數</div>
@@ -124,23 +152,29 @@
     </div>
 
     <div class="tabs">
-      <button class="tab active" data-tab="flash">Flashcard</button>
+      <button class="tab active" data-tab="flash">單字卡</button>
       <button class="tab" data-tab="quiz">練習題</button>
     </div>
 
     <!-- Flashcard -->
     <div id="flash" class="panel active">
-      <div class="progress" id="flash-progress">1 / 6</div>
+      <div class="progress" id="flash-progress">1 / 8</div>
       <div class="flashcard" id="card" onclick="flipCard()">
         <div class="label">點擊翻面</div>
         <div class="badge" id="card-badge"></div>
         <div class="front">
-          <div class="card-text" id="front-text"></div>
+          <div class="pos" id="front-pos"></div>
+          <div class="word" id="front-word"></div>
+          <div class="ipa" id="front-ipa"></div>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 讀音</button>
         </div>
         <div class="back">
-          <div class="card-text" id="back-text"></div>
-          <div class="card-note" id="back-note"></div>
-          <div class="card-example" id="back-example"></div>
+          <div class="word" id="back-word"></div>
+          <div class="ipa" id="back-ipa"></div>
+          <div class="meaning" id="back-meaning"></div>
+          <div class="spelling" id="back-spelling"></div>
+          <div class="example" id="back-example"></div>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord()">🔊 再聽一次</button>
         </div>
       </div>
       <div class="controls">
@@ -150,7 +184,7 @@
         <button class="btn primary" onclick="nextCard()">下一張</button>
       </div>
       <div class="weak-list" id="weak-box" style="display:none">
-        <h3>目前需加強的重點</h3>
+        <h3>目前需加強的單字</h3>
         <div id="weak-items"></div>
       </div>
     </div>
@@ -158,40 +192,150 @@
     <!-- Quiz -->
     <div id="quiz" class="panel">
       <div id="quiz-area"></div>
-      <div class="controls" style="margin-top:16px">
+      <div class="controls" style="margin-top:14px">
         <button class="btn primary" id="submit-btn" onclick="submitQuiz()">提交答案</button>
         <button class="btn" id="retry-btn" style="display:none" onclick="startQuiz()">再練一次</button>
       </div>
       <div class="result" id="result" style="display:none"></div>
     </div>
 
-    <footer>進度存在瀏覽器 localStorage · 清除資料請開 Console 執行 localStorage.clear()</footer>
+    <footer>進度存在瀏覽器 · 支援讀音（需瀏覽器允許語音）</footer>
   </div>
 
   <script>
-    // ===== Data =====
+    // ===== Vocabulary Cards (A2-B1) =====
     const cards = [
-      { id: "c1", front: "我去過日本。", back: "I have been to Japan.", note: "Present Perfect：有過某種經驗用 have/has + been", example: "She has been to Taiwan." },
-      { id: "c2", front: "我昨天去了公園。", back: "I went to the park yesterday.", note: "有明確過去時間 → 用 Past Simple", example: "He bought a book last week." },
-      { id: "c3", front: "因為下雨，所以我留在家。", back: "I stayed home because it was raining.", note: "because 用來說明原因", example: "She was late because of the traffic." },
-      { id: "c4", front: "雖然很累，我還是完成了工作。", back: "Although I was tired, I finished the work.", note: "although / though 表示「雖然」", example: "Although it was expensive, I bought it." },
-      { id: "c5", front: "你做完功課了嗎？", back: "Have you finished your homework?", note: "Present Perfect 常用來問到目前為止的完成情況", example: "Has she called you yet?" },
-      { id: "c6", front: "我從來沒吃過這個。", back: "I have never eaten this.", note: "never / ever 常跟 Present Perfect 一起用", example: "Have you ever tried sushi?" },
-      { id: "c7", front: "我們約在星期五見面。", back: "We are meeting on Friday.", note: "星期幾前面用 on", example: "The meeting is on Monday." },
-      { id: "c8", front: "他對這件事很有興趣。", back: "He is interested in this.", note: "interested in + 事物", example: "I'm interested in learning English." }
+      {
+        id: "w1",
+        word: "experience",
+        ipa: "/ɪkˈspɪəriəns/",
+        pos: "noun / verb",
+        meaning: "經驗；經歷",
+        spelling: "注意中間是 -eri-，不是 -eri-",
+        example: "I have a lot of experience in teaching."
+      },
+      {
+        id: "w2",
+        word: "although",
+        ipa: "/ɔːlˈðəʊ/",
+        pos: "conjunction",
+        meaning: "雖然、儘管",
+        spelling: "al-though，th 發 /ð/",
+        example: "Although it was raining, we went out."
+      },
+      {
+        id: "w3",
+        word: "recommend",
+        ipa: "/ˌrekəˈmend/",
+        pos: "verb",
+        meaning: "推薦",
+        spelling: "兩個 m：re-commend",
+        example: "I recommend this restaurant."
+      },
+      {
+        id: "w4",
+        word: "available",
+        ipa: "/əˈveɪləbl/",
+        pos: "adjective",
+        meaning: "可得到的、有空的",
+        spelling: "a-vail-able",
+        example: "Is this seat available?"
+      },
+      {
+        id: "w5",
+        word: "decision",
+        ipa: "/dɪˈsɪʒn/",
+        pos: "noun",
+        meaning: "決定",
+        spelling: "-sion 發 /ʒn/",
+        example: "It was a difficult decision."
+      },
+      {
+        id: "w6",
+        word: "improve",
+        ipa: "/ɪmˈpruːv/",
+        pos: "verb",
+        meaning: "改善、提升",
+        spelling: "im-prove",
+        example: "I want to improve my English."
+      },
+      {
+        id: "w7",
+        word: "necessary",
+        ipa: "/ˈnesəsəri/",
+        pos: "adjective",
+        meaning: "必要的",
+        spelling: "一個 c，兩個 s：ne-ces-sary",
+        example: "It is necessary to practice every day."
+      },
+      {
+        id: "w8",
+        word: "opportunity",
+        ipa: "/ˌɒpəˈtjuːnəti/",
+        pos: "noun",
+        meaning: "機會",
+        spelling: "op-por-tu-ni-ty（兩個 p）",
+        example: "This is a great opportunity for you."
+      }
     ];
 
+    // ===== Quiz with explanations =====
     const questions = [
-      { id: "q1", type: "mc", q: "選擇正確的句子", options: ["I have went to Japan.", "I have been to Japan.", "I has been to Japan."], answer: 1, point: "Present Perfect" },
-      { id: "q2", type: "fill", q: "我昨天看了一部電影。 → I ______ a movie yesterday.", answer: "watched", point: "Past Simple" },
-      { id: "q3", type: "mc", q: "選擇正確的連接詞：___ it was raining, we went out.", options: ["Because", "Although", "So"], answer: 1, point: "Connecting words" },
-      { id: "q4", type: "fill", q: "你曾經去過香港嗎？ → ______ you ever been to Hong Kong?", answer: "have", point: "Present Perfect" },
-      { id: "q5", type: "mc", q: "選擇正確的句子", options: ["She is interested on music.", "She is interested in music.", "She interested in music."], answer: 1, point: "Collocation" },
-      { id: "q6", type: "fill", q: "因為我很忙，所以沒回覆。 → I didn't reply ______ I was busy.", answer: "because", point: "Connecting words" }
+      {
+        id: "q1",
+        type: "mc",
+        q: "「經驗」的正確拼法是？",
+        options: ["experiance", "experience", "expirience"],
+        answer: 1,
+        point: "experience",
+        explain: "正確是 experience。中間是 -eri-，很多人會拼成 -eri- 或 -iri-。"
+      },
+      {
+        id: "q2",
+        type: "fill",
+        q: "雖然下雨，我們還是出去了。 → ______ it was raining, we went out.",
+        answer: "although",
+        point: "although",
+        explain: "表示「雖然」用 although（或 though）。because 是「因為」。"
+      },
+      {
+        id: "q3",
+        type: "mc",
+        q: "選擇正確的句子",
+        options: ["I recommend you this book.", "I recommend this book to you.", "I recommend to you this book."],
+        answer: 1,
+        point: "recommend",
+        explain: "recommend 的常用句型是 recommend something to someone。"
+      },
+      {
+        id: "q4",
+        type: "fill",
+        q: "這個 ent 有空嗎？ → Is this seat ______ ?",
+        answer: "available",
+        point: "available",
+        explain: "available 表示「可使用的 / 有空的」。"
+      },
+      {
+        id: "q5",
+        type: "mc",
+        q: "「必要的」正確拼法？",
+        options: ["necesary", "necessary", "neccesary"],
+        answer: 1,
+        point: "necessary",
+        explain: "necessary 是一個 c、兩個 s（ne-ces-sary）。很多人选錯雙寫位置。"
+      },
+      {
+        id: "q6",
+        type: "fill",
+        q: "我想提升我的英文。 → I want to ______ my English.",
+        answer: "improve",
+        point: "improve",
+        explain: "improve 是動詞「改善、提升」。"
+      }
     ];
 
-    // ===== Storage helpers =====
-    const STORAGE_KEY = "englishPracticeData";
+    // ===== Storage =====
+    const STORAGE_KEY = "englishVocabData";
 
     function loadData() {
       try {
@@ -201,68 +345,67 @@
       }
     }
 
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    function saveData(d) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
       updateStats();
     }
 
     let data = loadData();
 
+    // ===== Speech =====
+    function speakWord() {
+      const c = orderedCards[current];
+      if (!c || !window.speechSynthesis) return;
+      const utt = new SpeechSynthesisUtterance(c.word);
+      utt.lang = "en-US";
+      utt.rate = 0.85;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utt);
+    }
+
     // ===== Stats =====
     function updateStats() {
       const history = data.quizHistory || [];
       document.getElementById("stat-quizzes").textContent = history.length;
-
-      if (history.length > 0) {
+      if (history.length) {
         const avg = Math.round(history.reduce((s, h) => s + h.percent, 0) / history.length);
         document.getElementById("stat-avg").textContent = avg + "%";
       } else {
         document.getElementById("stat-avg").textContent = "-";
       }
-
-      const weakCount = Object.values(data.cardStatus || {}).filter(s => s === "weak").length +
-                        Object.keys(data.weakPoints || {}).length;
+      const weakCount = Object.values(data.cardStatus || {}).filter(s => s === "weak").length;
       document.getElementById("stat-weak").textContent = weakCount;
 
-      // weak list
       const weakBox = document.getElementById("weak-box");
       const weakItems = document.getElementById("weak-items");
       const weaks = [];
       Object.entries(data.cardStatus || {}).forEach(([id, status]) => {
         if (status === "weak") {
           const c = cards.find(x => x.id === id);
-          if (c) weaks.push(c.front + " → " + c.back);
+          if (c) weaks.push(c.word + " （" + c.meaning + "）");
         }
       });
-      Object.entries(data.weakPoints || {}).forEach(([point, count]) => {
-        if (count > 0) weaks.push(point + " (錯過 " + count + " 次)");
-      });
-
       if (weaks.length) {
         weakBox.style.display = "block";
-        weakItems.innerHTML = weaks.slice(0, 6).map(w => "• " + w).join("<br>");
+        weakItems.innerHTML = weaks.map(w => "• " + w).join("<br>");
       } else {
         weakBox.style.display = "none";
       }
     }
 
-    // ===== Flashcard with priority =====
+    // ===== Flashcard =====
     let orderedCards = [];
     let current = 0;
 
     function buildCardOrder() {
-      // Prioritize weak cards first
-      const weak = [];
-      const normal = [];
-      const known = [];
+      const weak = [], normal = [], known = [];
       cards.forEach(c => {
-        const status = (data.cardStatus || {})[c.id];
-        if (status === "weak") weak.push(c);
-        else if (status === "known") known.push(c);
+        const s = (data.cardStatus || {})[c.id];
+        if (s === "weak") weak.push(c);
+        else if (s === "known") known.push(c);
         else normal.push(c);
       });
-      // shuffle helpers
-      const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+      const shuffle = a => a.sort(() => Math.random() - 0.5);
       orderedCards = [...shuffle(weak), ...shuffle(normal), ...shuffle(known)];
       current = 0;
     }
@@ -270,9 +413,13 @@
     function showCard() {
       if (!orderedCards.length) buildCardOrder();
       const c = orderedCards[current];
-      document.getElementById("front-text").textContent = c.front;
-      document.getElementById("back-text").textContent = c.back;
-      document.getElementById("back-note").textContent = c.note;
+      document.getElementById("front-pos").textContent = c.pos;
+      document.getElementById("front-word").textContent = c.word;
+      document.getElementById("front-ipa").textContent = c.ipa;
+      document.getElementById("back-word").textContent = c.word;
+      document.getElementById("back-ipa").textContent = c.ipa;
+      document.getElementById("back-meaning").textContent = c.meaning;
+      document.getElementById("back-spelling").textContent = "拼法重點：" + c.spelling;
       document.getElementById("back-example").textContent = "例句：" + c.example;
       document.getElementById("flash-progress").textContent = (current + 1) + " / " + orderedCards.length;
 
@@ -288,7 +435,6 @@
         badge.textContent = "";
         badge.className = "badge";
       }
-
       document.getElementById("card").classList.remove("flipped");
     }
 
@@ -333,7 +479,6 @@
       document.getElementById("submit-btn").style.display = "inline-block";
       document.getElementById("retry-btn").style.display = "none";
 
-      // simple prioritization: put previously weak point questions first
       const sortedQ = [...questions].sort((a, b) => {
         const wa = (data.weakPoints || {})[a.point] || 0;
         const wb = (data.weakPoints || {})[b.point] || 0;
@@ -343,8 +488,7 @@
       sortedQ.forEach((q, i) => {
         const div = document.createElement("div");
         div.className = "question-card";
-        div.dataset.qid = q.id;
-        div.innerHTML = `<div class="q-num">第 ${i + 1} 題 · ${q.point}</div><div class="q-text">${q.q}</div>`;
+        div.innerHTML = `<div class="q-num">第 ${i + 1} 題</div><div class="q-text">${q.q}</div>`;
 
         if (q.type === "mc") {
           const opts = document.createElement("div");
@@ -356,7 +500,7 @@
             o.onclick = () => {
               opts.querySelectorAll(".option").forEach(el => el.classList.remove("selected"));
               o.classList.add("selected");
-              userAnswers[i] = { id: q.id, value: j, point: q.point, type: "mc", correct: q.answer };
+              userAnswers[i] = { value: j };
             };
             opts.appendChild(o);
           });
@@ -365,15 +509,20 @@
           const input = document.createElement("input");
           input.className = "fill-input";
           input.placeholder = "請輸入答案";
-          input.oninput = (e) => {
-            userAnswers[i] = { id: q.id, value: e.target.value.trim().toLowerCase(), point: q.point, type: "fill", correct: q.answer.toLowerCase() };
-          };
+          input.oninput = (e) => userAnswers[i] = { value: e.target.value.trim().toLowerCase() };
           div.appendChild(input);
         }
+
+        // explanation placeholder
+        const exp = document.createElement("div");
+        exp.className = "explain";
+        exp.id = "explain-" + i;
+        exp.textContent = q.explain;
+        div.appendChild(exp);
+
         area.appendChild(div);
       });
 
-      // store order for scoring
       window._currentQuestions = sortedQ;
     }
 
@@ -384,17 +533,31 @@
 
       qs.forEach((q, i) => {
         const ans = userAnswers[i];
-        const isCorrect = ans && (
-          (q.type === "mc" && ans.value === q.answer) ||
-          (q.type === "fill" && ans.value === q.answer.toLowerCase())
-        );
+        let isCorrect = false;
+        if (q.type === "mc") {
+          isCorrect = ans && ans.value === q.answer;
+        } else {
+          isCorrect = ans && ans.value === q.answer.toLowerCase();
+        }
 
         if (isCorrect) {
           correct++;
         } else {
-          // record weak point
           data.weakPoints = data.weakPoints || {};
           data.weakPoints[q.point] = (data.weakPoints[q.point] || 0) + 1;
+          // also mark related card as weak if exists
+          const related = cards.find(c => c.word === q.point);
+          if (related) {
+            data.cardStatus = data.cardStatus || {};
+            data.cardStatus[related.id] = "weak";
+          }
+        }
+
+        // show explanation when wrong (or always for learning)
+        const expEl = document.getElementById("explain-" + i);
+        if (expEl) {
+          expEl.classList.add("show");
+          if (!isCorrect) expEl.style.borderColor = "var(--error)";
         }
 
         if (q.type === "mc") {
@@ -411,7 +574,7 @@
             input.style.borderColor = "var(--success)";
           } else {
             input.style.borderColor = "var(--error)";
-            input.placeholder = "正確：" + q.answer;
+            input.placeholder = "正確答案：" + q.answer;
           }
         }
       });
@@ -419,7 +582,6 @@
       const percent = Math.round((correct / qs.length) * 100);
       data.quizHistory = data.quizHistory || [];
       data.quizHistory.push({ date: new Date().toISOString(), correct, total: qs.length, percent });
-      // keep last 30
       if (data.quizHistory.length > 30) data.quizHistory = data.quizHistory.slice(-30);
       saveData(data);
 
@@ -427,11 +589,11 @@
       result.style.display = "block";
       result.innerHTML = `<div class="score">${correct} / ${qs.length}</div>
         <p style="margin-top:6px">正確率 ${percent}%</p>
-        <p style="margin-top:6px;color:var(--muted)">${percent === 100 ? "太強了！全部答對" : "已記錄弱點，Flashcard 會優先出現相關卡片"}</p>`;
+        <p style="margin-top:6px;color:var(--muted)">${percent === 100 ? "全部答對，很棒！" : "已顯示錯題解釋，並標記相關單字為需加強"}</p>`;
 
       document.getElementById("submit-btn").style.display = "none";
       document.getElementById("retry-btn").style.display = "inline-block";
-      buildCardOrder(); // refresh priority
+      buildCardOrder();
     }
 
     // Tabs
